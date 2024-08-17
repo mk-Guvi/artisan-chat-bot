@@ -6,7 +6,14 @@ import {
   useCallback,
 } from "react";
 import { ChatI } from "../types/chatbot.types";
-import { ChatBotIcon } from "../components/chatbot/chatbotComponents";
+import {
+  ChatBotIcon,
+  dummyData,
+} from "../components/chatbot/chatbotComponents";
+import ChatbotContainer from "../components/chatbot/ChatbotContainer";
+import { BackendGet } from "../integration";
+import { backendRoutes } from "../constants";
+import { suspenseDelay } from "../../utils";
 
 interface ChatbotProviderPropsI {
   children: React.ReactNode;
@@ -15,36 +22,58 @@ interface ChatbotProviderPropsI {
 export interface ChatViewStateT {
   loading: boolean;
   chats: ChatI[];
+  chatId: string;
+  page: number;
+  count: number;
   hideInputfield: boolean;
 }
 export interface ChatBotStateI {
   open: boolean;
   route: "chats" | "chat-view";
-  chats_list: ChatI[];
+  chatsListView: {
+    loading: boolean;
+    chats: ChatI[];
+    page: number;
+    count: number;
+  };
   chatView: ChatViewStateT;
 }
 const initialState: ChatBotStateI = {
   open: false,
   route: "chats",
-  chats_list: [],
+  chatsListView: {
+    loading: true,
+    chats: [],
+    page: 1,
+    count: 50,
+  },
   chatView: {
     chats: [],
+    chatId: "",
     hideInputfield: false,
     loading: true,
+    page: 1,
+    count: 50,
   },
 };
 interface ChatbotContextI {
   handleState: (payload: Partial<ChatBotStateI>) => void;
   handleChatView: (payload: Partial<ChatBotStateI["chatView"]>) => void;
+  handleChatsListView: (
+    payload: Partial<ChatBotStateI["chatsListView"]>
+  ) => void;
   toggleChat: () => void;
   onBackToChats: () => void;
   chatbot: ChatBotStateI;
+  getChats: () => Promise<void>;
 }
 export const ChatbotContext = createContext<ChatbotContextI>({
   handleState: () => {},
   toggleChat: () => {},
   handleChatView: () => {},
   onBackToChats: () => {},
+  handleChatsListView: () => {},
+  getChats: async () => {},
   chatbot: initialState,
 });
 
@@ -71,7 +100,41 @@ const ChatbotProvider: React.FC<ChatbotProviderPropsI> = ({ children }) => {
   const onBackToChats = useCallback(() => {
     setState((prev) => ({ ...prev, route: "chats" }));
   }, []);
-
+  const handleChatsListView = useCallback(
+    (payload: Partial<ChatBotStateI["chatsListView"]>) => {
+      setState((prev) => ({
+        ...prev,
+        chatsListView: {
+          ...prev.chatsListView,
+          ...payload,
+        },
+      }));
+    },
+    []
+  );
+  const getChats = useCallback(async () => {
+    try {
+      handleChatsListView({ loading: true });
+      await suspenseDelay(2000);
+      handleChatsListView({
+        chats: [dummyData],
+        count: 100,
+        page: 1,
+      });
+      // const response = await BackendGet({
+      //   path: backendRoutes.chatLists,
+      //   queryParams: {
+      //     page: state.chatsListView.page,
+      //     count: state.chatsListView.count,
+      //   },
+      // });
+    } catch (e) {
+      console.log(e);
+      handleChatsListView({ chats: [] });
+    } finally {
+      handleChatsListView({ loading: false });
+    }
+  }, [state.chatsListView]);
   const contextValue = useMemo(
     () => ({
       chatbot: state,
@@ -79,14 +142,25 @@ const ChatbotProvider: React.FC<ChatbotProviderPropsI> = ({ children }) => {
       toggleChat,
       handleChatView,
       onBackToChats,
+      handleChatsListView,
+      getChats,
     }),
-    [state, handleState, handleChatView, onBackToChats, toggleChat]
+    [
+      state,
+      handleChatsListView,
+      handleState,
+      handleChatView,
+      onBackToChats,
+      toggleChat,
+      getChats,
+    ]
   );
 
   return (
     <ChatbotContext.Provider value={contextValue}>
       {children}
-      <ChatBotIcon/>
+      <ChatbotContainer />
+      <ChatBotIcon />
     </ChatbotContext.Provider>
   );
 };

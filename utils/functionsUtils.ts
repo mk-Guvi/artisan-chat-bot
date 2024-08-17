@@ -61,3 +61,10 @@ export function generateBaseUrl() {
 
   return `${protocol}//${host}`;
 }
+
+
+export function suspenseDelay(ms:number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}

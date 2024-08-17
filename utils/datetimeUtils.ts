@@ -33,22 +33,20 @@ const TIME_UNITS = [
   { unit: 'hour', limit: 60, singular: 'hour', plural: 'hours' },
   { unit: 'minute', limit: 1, singular: 'minute', plural: 'minutes' }
 ] as const;
-
-export const getLastSeen = (timestampInSeconds: number): string => {
-  const timeDifferenceMinutes = dayjs().diff(dayjs.unix(timestampInSeconds), 'minute');
+export const getLastSeen = (utcString: string): string => {
+  const timeDifferenceMinutes = dayjs().diff(dayjs(utcString), 'minute');
 
   if (timeDifferenceMinutes < 1) return 'Just now';
 
-  for (const {  limit, singular, plural } of TIME_UNITS) {
-    if (timeDifferenceMinutes >= limit) {
-      const value = Math.floor(timeDifferenceMinutes / limit);
+  for (const { limit, singular, plural } of TIME_UNITS) {
+    if (timeDifferenceMinutes < limit) {
+      const value = Math.floor(timeDifferenceMinutes / (limit / 60));
       return `${value} ${value === 1 ? singular : plural} ago`;
     }
   }
 
   return 'Just now'; // Fallback
 };
-
 export const DateAndTimeFormats = {
   DATE: 'D MMMM YYYY',
   DATETIME: 'D MMMM YYYY, hh:mm a',

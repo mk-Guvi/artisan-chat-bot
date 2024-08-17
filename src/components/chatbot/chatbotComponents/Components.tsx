@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import tw from "tailwind-styled-components";
-import { MessageSvg } from "./ChatbotSvg";
-import { H5, LargeText, MediumText, SmallText } from "../../Typography";
+import { ChatbotSvg, MessageSvg } from "./ChatbotSvg";
+import { ExtraSmallText, H5, LargeText, MediumText, SmallText } from "../../Typography";
 import { LANG } from "../../../constants";
 import { useChatbot } from "../../../providers/chatbotProvider";
 import { Icon } from "../../Icons";
@@ -22,8 +22,8 @@ export const ChatBotIcon = () => {
 
   return (
     <div
-      className={`fixed  h-10 w-10   text-white flex items-center justify-center  rounded-full drop-shadow-lg hover:scale-110 transition-all duration-200 bg-blue-500 z-50 bottom-6 right-6 transform ${
-        chatbot.open ? "rotate-180 " : ""
+      className={`fixed  h-10 w-10  sm:flex  text-white flex items-center justify-center  rounded-full drop-shadow-lg hover:scale-110 transition-all duration-200 bg-purple-500 z-50 bottom-6 right-6 transform ${
+        chatbot.open ? "rotate-180 hidden" : ""
       } `}
       onClick={toggleChat}
     >
@@ -82,11 +82,7 @@ export const ChatHeader = (props: ChatHeaderPropsT) => {
     <div className="py-2 border-b">
       <Header>
         <ActionIcon icon="chevron-left" onClick={onBackToChats} />
-        {showDetailedView ? (
-          <H5 className="inline-flex flex-1 justify-center items-center">
-            {LANG.CHATBOT.CHATBOT_NAME}
-          </H5>
-        ) : null}
+        
         {!showDetailedView ? (
           <button
             disabled={!allowToggle}
@@ -116,16 +112,11 @@ export const ChatHeader = (props: ChatHeaderPropsT) => {
               allowToggle ? "hover:bg-gray-100 rounded-lg" : ""
             }`}
           >
-            <img
-              src="https://static.intercomassets.com/assets/default-avatars/fin/128-6a5eabbb84cc2b038b2afc6698ca0a974faf7adc9ea9f0fb3c3e78ac12543bc5.png"
-              alt="Fin profile"
-              width={50}
-              height={50}
-            />
+            <ChatbotSvg className="h-8 w-8" />
             <MediumText>{LANG.CHATBOT.ASK_A_QUESTION}</MediumText>
             <div className="inline-flex gap-2 items-center">
               <Icon icon="alert-circle" />
-              <SmallText>{LANG.CHATBOT.TEAM_CAN_HELP}</SmallText>
+              <ExtraSmallText>{LANG.CHATBOT.DEFAULT_QUESTION}</ExtraSmallText>
             </div>
           </button>
         </div>
@@ -138,3 +129,5 @@ const Header = tw.header`flex   px-1.5`;
 const ActionIcon = tw(
   Icon
 )` text-blue-600 hover:bg-blue-100 p-3 !h-14 cursor-pointer !w-14 rounded-2xl transition-all duration-300`;
+
+
