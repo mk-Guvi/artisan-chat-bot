@@ -1,0 +1,3 @@
+export const STORAGE_KEYS = {
+ ARTISAN_CHAT_USER:"ARTISAN_CHAT_USER"
+};
