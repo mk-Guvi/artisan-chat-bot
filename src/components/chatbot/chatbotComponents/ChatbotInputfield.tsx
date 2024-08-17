@@ -48,7 +48,11 @@ export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
   }, [inputElementRef, onSubmit]);
 
   return (
-    <div className="h-[4rem] sm:h-[3.5rem] items-center px-4 sm:rounded-b-lg group border-t flex gap-3 bg-gray-50 w-full">
+    <div
+      className={`h-[4rem] sm:h-[3.5rem] items-center px-4 sm:rounded-b-lg group border-t flex gap-2 bg-gray-50 w-full ${
+        disabled ? "cursor-not-allowed" : ""
+      }`}
+    >
       <input
         id={"submit"}
         disabled={disabled}
@@ -59,12 +63,14 @@ export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
         ref={inputElementRef}
         autoComplete={"new-password"}
         value={value || ""}
-        className="flex-1 h-full bg-transparent outline-none border-0 px-4 ring-0"
+        className={`flex-1 h-full bg-transparent outline-none border-0  ring-0 ${
+          disabled ? "cursor-not-allowed" : ""
+        }`}
       />
       {value ? (
         <Icon
           icon="send"
-          className="text-blue-500 cursor-pointer"
+          className="text-purple-500 cursor-pointer"
           onClick={onSubmit}
         />
       ) : null}

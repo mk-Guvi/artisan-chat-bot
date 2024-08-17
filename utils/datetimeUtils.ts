@@ -26,27 +26,21 @@ export const convertLocalDateToUTC = (
   outputFormat: string = 'YYYY-MM-DDTHH:mm:ss[Z]'
 ): string => dayjs(localDate, inputFormat).utc().format(outputFormat);
 
-const TIME_UNITS = [
-  { unit: 'year', limit: 525600, singular: 'year', plural: 'years' },
-  { unit: 'week', limit: 10080, singular: 'week', plural: 'weeks' },
-  { unit: 'day', limit: 1440, singular: 'day', plural: 'days' },
-  { unit: 'hour', limit: 60, singular: 'hour', plural: 'hours' },
-  { unit: 'minute', limit: 1, singular: 'minute', plural: 'minutes' }
-] as const;
 export const getLastSeen = (utcString: string): string => {
-  const timeDifferenceMinutes = dayjs().diff(dayjs(utcString), 'minute');
+  const now = dayjs();
+  const then = dayjs(utcString);
+  const diff = now.diff(then, 'second');
 
-  if (timeDifferenceMinutes < 1) return 'Just now';
-
-  for (const { limit, singular, plural } of TIME_UNITS) {
-    if (timeDifferenceMinutes < limit) {
-      const value = Math.floor(timeDifferenceMinutes / (limit / 60));
-      return `${value} ${value === 1 ? singular : plural} ago`;
-    }
-  }
-
-  return 'Just now'; // Fallback
+  if (diff < 30) return 'Just now';
+  if (diff < 60) return 'Less than a minute ago';
+  if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} days ago`;
+  if (diff < 2592000) return `${Math.floor(diff / 604800)} weeks ago`;
+  if (diff < 31536000) return `${Math.floor(diff / 2592000)} months ago`;
+  return `${Math.floor(diff / 31536000)} years ago`;
 };
+
 export const DateAndTimeFormats = {
   DATE: 'D MMMM YYYY',
   DATETIME: 'D MMMM YYYY, hh:mm a',

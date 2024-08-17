@@ -10,11 +10,13 @@ export interface ChatI {
     profileImage: string;
     is_bot: boolean;
   };
+  
   chat_id: string;
   context: "ONBOARDING";
   created_at: string;
   updated_at: string;
   message: {
+    id:string
     type: "string" | "HTML";
     value: string;
   };

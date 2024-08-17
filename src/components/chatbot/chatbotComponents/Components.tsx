@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 
 import tw from "tailwind-styled-components";
-import { ChatbotSvg, MessageSvg } from "./ChatbotSvg";
-import { ExtraSmallText, H5, LargeText, MediumText, SmallText } from "../../Typography";
+import { ChatbotSvg,  } from "./ChatbotSvg";
+import {
+  ExtraSmallText,
+ 
+  MediumText,
+  SmallText,
+} from "../../Typography";
 import { LANG } from "../../../constants";
 import { useChatbot } from "../../../providers/chatbotProvider";
 import { Icon } from "../../Icons";
+import { CircularLoader } from "../../loaders";
 
-export const NoMessagesPlaceholder = () => {
-  return (
-    <div className=" justify-center m-auto items-center flex flex-col gap-2">
-      <MessageSvg />
-      <LargeText>{LANG.CHATBOT.NO_MESSAGES}</LargeText>
-      <SmallText>{LANG.CHATBOT.MESSAGES_FROM_TEAM}</SmallText>
-    </div>
-  );
+export const ChatsLoader = () => {
+  return <div className="h-full gap-2 text-purple-800 w-full flex flex-col items-center justify-center">
+    <CircularLoader className="text-inherit h-5 w-5" />
+    <SmallText>Getting Your Chats.</SmallText>
+  </div>;
 };
 
 export const ChatBotIcon = () => {
@@ -45,89 +48,36 @@ export const ChatBotIcon = () => {
   );
 };
 
-type ChatHeaderPropsT = {
-  isDetailedView?: boolean;
-  allowToggle?: boolean;
-};
-
-export const CoversationHeader = () => {
-  return (
-    <div className="flex w-full items-center transition-all duration-200 hover:bg-gray-100 gap-3 rounded-lg cursor-pointer  ">
-      <img
-        src="https://static.intercomassets.com/assets/default-avatars/fin/128-6a5eabbb84cc2b038b2afc6698ca0a974faf7adc9ea9f0fb3c3e78ac12543bc5.png"
-        alt="Artisan profile"
-        width={40}
-        height={40}
-      />
-      <div className="flex flex-col justify-start items-start">
-        <MediumText>{LANG.CHATBOT.CHATBOT_NAME}</MediumText>
-        <MediumText className="inline-flex items-center gap-1">
-          <span className="bg-gray-500 px-1.5 py-0 text-[0.7rem] text-white rounded-md">
-            AI
-          </span>
-          {"Bot"}
-        </MediumText>
-      </div>
-    </div>
-  );
-};
-export const ChatHeader = (props: ChatHeaderPropsT) => {
+export const ChatHeader = () => {
   const { onBackToChats, toggleChat } = useChatbot();
-  const { allowToggle, isDetailedView } = props;
-  const [showDetailedView, setShowDetailedView] = useState(isDetailedView);
-  const toggleView = () => {
-    setShowDetailedView((prev) => !prev);
-  };
-  return (
-    <div className="py-2 border-b">
-      <Header>
-        <ActionIcon icon="chevron-left" onClick={onBackToChats} />
-        
-        {!showDetailedView ? (
-          <button
-            disabled={!allowToggle}
-            onClick={toggleView}
-            className={`flex flex-col flex-1 items-center w-full gap-3 p-3 ${
-              allowToggle ? "hover:bg-gray-100 rounded-lg" : ""
-            }`}
-          >
-            <CoversationHeader />
-          </button>
-        ) : null}
 
-        <ActionIcon
-          icon="x"
-          className="sm:invisible visible"
-          onClick={toggleChat}
-        />
-      </Header>
-      {showDetailedView ? (
-        <div
-          className={`flex flex-col px-2  transition-all duration-200 gap-3  `}
-        >
-          <button
-            disabled={!allowToggle}
-            onClick={toggleView}
-            className={`flex flex-col flex-1 items-center w-full gap-3 p-3 ${
-              allowToggle ? "hover:bg-gray-100 rounded-lg" : ""
-            }`}
-          >
-            <ChatbotSvg className="h-8 w-8" />
-            <MediumText>{LANG.CHATBOT.ASK_A_QUESTION}</MediumText>
-            <div className="inline-flex gap-2 items-center">
-              <Icon icon="alert-circle" />
-              <ExtraSmallText>{LANG.CHATBOT.DEFAULT_QUESTION}</ExtraSmallText>
-            </div>
-          </button>
-        </div>
-      ) : null}
-    </div>
+  return (
+    <header className="p-2 py-4 border-b w-full flex">
+      <ActionIcon
+        icon="chevron-left"
+        className="text-purple-700"
+        onClick={onBackToChats}
+      />
+
+      <div
+        className={`flex flex-col px-2 items-center flex-1 justify-center transition-all duration-200 gap-2  `}
+      >
+        <ChatbotSvg className="h-8 w-8" />
+        <MediumText>{LANG.CHATBOT.ASK_A_QUESTION}</MediumText>
+
+        <ExtraSmallText className="text-center">
+          {LANG.CHATBOT.DEFAULT_QUESTION}
+        </ExtraSmallText>
+      </div>
+      <ActionIcon
+        icon="x"
+        className="text-purple-800 sm:invisible visible"
+        onClick={toggleChat}
+      />
+    </header>
   );
 };
 
-const Header = tw.header`flex   px-1.5`;
 const ActionIcon = tw(
   Icon
-)` text-blue-600 hover:bg-blue-100 p-3 !h-14 cursor-pointer !w-14 rounded-2xl transition-all duration-300`;
-
-
+)` text-blue-600 hover:bg-purple-100 p-1 !h-10 cursor-pointer !w-10 rounded-2xl transition-all duration-300`;

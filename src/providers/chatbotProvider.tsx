@@ -11,8 +11,6 @@ import {
   dummyData,
 } from "../components/chatbot/chatbotComponents";
 import ChatbotContainer from "../components/chatbot/ChatbotContainer";
-import { BackendGet } from "../integration";
-import { backendRoutes } from "../constants";
 import { suspenseDelay } from "../../utils";
 
 interface ChatbotProviderPropsI {
