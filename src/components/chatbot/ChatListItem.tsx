@@ -9,7 +9,7 @@ import { Icon } from "../Icons";
 
 type ListItemPropT = {
   chat: ChatI;
-  onRouteToChatview: (conversatin: ChatI) => void;
+  onRouteToChatview: (chat: ChatI) => void;
 };
 
 function ListItem({ chat, onRouteToChatview }: ListItemPropT) {

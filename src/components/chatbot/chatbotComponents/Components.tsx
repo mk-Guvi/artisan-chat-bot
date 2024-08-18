@@ -1,36 +1,33 @@
 import React from "react";
 
 import tw from "tailwind-styled-components";
-import { ChatbotSvg,  } from "./ChatbotSvg";
-import {
-  ExtraSmallText,
- 
-  MediumText,
-  SmallText,
-} from "../../Typography";
+import { ChatbotSvg } from "./ChatbotSvg";
+import { ExtraSmallText, MediumText, SmallText } from "../../Typography";
 import { LANG } from "../../../constants";
 import { useChatbot } from "../../../providers/chatbotProvider";
 import { Icon } from "../../Icons";
 import { CircularLoader } from "../../loaders";
 
 export const ChatsLoader = () => {
-  return <div className="h-full gap-2 text-purple-800 w-full flex flex-col items-center justify-center">
-    <CircularLoader className="text-inherit h-5 w-5" />
-    <SmallText>Getting Your Chats.</SmallText>
-  </div>;
+  return (
+    <div className="h-full gap-2 text-purple-800 w-full flex flex-col items-center justify-center">
+      <CircularLoader className="text-inherit h-5 w-5" />
+      <SmallText>Getting Your Chats.</SmallText>
+    </div>
+  );
 };
 
 export const ChatBotIcon = () => {
-  const { chatbot, toggleChat } = useChatbot();
+  const { open, toggleChat } = useChatbot();
 
   return (
     <div
       className={`fixed  h-10 w-10  sm:flex  text-white flex items-center justify-center  rounded-full drop-shadow-lg hover:scale-110 transition-all duration-200 bg-purple-500 z-50 bottom-6 right-6 transform ${
-        chatbot.open ? "rotate-180 hidden" : ""
+        open ? "rotate-180 hidden" : ""
       } `}
       onClick={toggleChat}
     >
-      {chatbot.open ? (
+      {open ? (
         <Icon icon="chevron-up" className="p-0.5" />
       ) : (
         <svg
@@ -49,16 +46,13 @@ export const ChatBotIcon = () => {
 };
 
 export const ChatHeader = () => {
-  const { onBackToChats, toggleChat } = useChatbot();
+  const { onBackToChats, toggleChat, actionsDisable } = useChatbot();
 
   return (
     <header className="p-2 py-4 border-b w-full flex">
-      <ActionIcon
-        icon="chevron-left"
-        className="text-purple-700"
-        onClick={onBackToChats}
-      />
-
+      <button disabled={actionsDisable} onClick={onBackToChats}>
+        <ActionIcon icon="chevron-left" className="text-purple-700" />
+      </button>
       <div
         className={`flex flex-col px-2 items-center flex-1 justify-center transition-all duration-200 gap-2  `}
       >

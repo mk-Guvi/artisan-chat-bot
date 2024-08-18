@@ -4,10 +4,11 @@ import { Icon } from "../../Icons";
 
 type ChatbotInputfieldPropsT = {
   disabled?: boolean;
-  onEnter: (block: { type: string; value: string }) => void;
+  onEnter: (value: string) => void;
+  inpValue?: string;
 };
 export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
-  const { onEnter, disabled } = props;
+  const { onEnter, disabled, inpValue } = props;
   const inputElementRef = useRef<HTMLInputElement | null>(null);
   const [value, setValue] = useState("");
 
@@ -15,12 +16,14 @@ export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
     setValue("");
   };
 
+  useEffect(() => {
+    setValue(inpValue || "");
+  }, [inpValue]);
+
   const onSubmit = useCallback(() => {
-    if (!disabled && value) {
-      onEnter({
-        type: "paragraph",
-        value,
-      });
+    const trimmedValue = value?.trim();
+    if (!disabled && trimmedValue) {
+      onEnter(trimmedValue);
       clearAll();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

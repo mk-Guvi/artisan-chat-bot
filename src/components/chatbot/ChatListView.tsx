@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { H5, SmallText } from "../Typography";
 import { useChatbot } from "../../providers/chatbotProvider";
 
@@ -7,13 +7,12 @@ import { LANG } from "../../constants";
 import { ChatbotSvg, ChatsLoader } from "./chatbotComponents";
 import { CreateChatButton } from "./chatbotComponents";
 import ListItem from "./ChatListItem";
-import { ChatI } from "../../types/chatbot.types";
 
 function ChatListView() {
   const {
-    chatbot: { chatsListView, open },
-    handleChatView,
-    handleState,
+    chatsListView,
+    onRouteToChatview,
+
     getChats,
   } = useChatbot();
 
@@ -22,10 +21,7 @@ function ChatListView() {
       getChats();
     }
   }, [open]);
-  const onRouteToChatview = useCallback((chat: ChatI) => {
-    handleState({ route: "chat-view" });
-    handleChatView({ chatId: chat?.chat_id });
-  }, []);
+
   return (
     <div className="h-full flex relative flex-col w-full text-center overflow-auto">
       <header className="bg-purple-100 text-purple-800 p-3 rounded-t-lg border-b-purple-200 border-b z-10">
@@ -33,7 +29,7 @@ function ChatListView() {
       </header>
       <section className="flex-1 overflow-y-auto overflow-x-hidden">
         {chatsListView?.loading ? (
-          <ChatsLoader/>
+          <ChatsLoader />
         ) : chatsListView?.chats?.length ? (
           <div className="h-full w-full">
             {chatsListView?.chats?.map((each) => {
