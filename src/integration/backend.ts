@@ -7,8 +7,7 @@ import axios, {
 } from "axios";
 import { backendRoutes } from "../constants";
 
-const baseURL: string = "http://localhost:8000/" || "";
-
+const baseURL: string = import.meta.env.VITE_BASE_URL || "http://localhost:8000/";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL,
@@ -40,7 +39,7 @@ axiosInstance.interceptors.response.use(
 );
 
 interface BackendRequestParams {
-  path: typeof backendRoutes[keyof typeof backendRoutes];
+  path: (typeof backendRoutes)[keyof typeof backendRoutes];
   data?: Record<string, any>;
   queryParams?: Record<string, any>;
   headers?: {

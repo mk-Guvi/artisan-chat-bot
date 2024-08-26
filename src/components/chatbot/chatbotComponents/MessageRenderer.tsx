@@ -28,18 +28,18 @@ export function MessageRenderer(props: MessageRendererPropsI) {
           <div key={each?.message?.id} className="flex flex-col gap-2">
             <div
               className={`flex group transition-all duration-300 pb-2 text-purple-800 items-start gap-1.5 relative ${
-                each?.user?.is_bot ? "justify-start" : "justify-end"
+                each?.from_user?.is_bot ? "justify-start" : "justify-end"
               }`}
             >
-              {each?.user?.is_bot ? (
+              {each?.from_user?.is_bot ? (
                 <div
                   className={`h-8 w-8 mt-1.5 ${
                     each?.isLoading ? "flex items-center justify-center" : ""
                   } rounded-lg relative`}
                 >
                   <img
-                    alt={each?.user?.name}
-                    src={each?.user.profile_image}
+                    alt={each?.from_user?.name}
+                    src={each?.from_user?.profile_image}
                     className={`${
                       each?.isLoading ? "opacity-0" : ""
                     } h-full w-full rounded-lg  object-contain`}
@@ -53,18 +53,26 @@ export function MessageRenderer(props: MessageRendererPropsI) {
               ) : each?.isLoading ? null : (
                 <div
                   className={`${
-                    props?.editItem === each?.message?.id ? "flex" : "group-hover:flex hidden"
-                  }   flex-wrap text-gray-500  justify-center mt-1.5 items-center gap-0.5`}
+                    props?.editItem === each?.message?.id
+                      ? "flex"
+                      : "group-hover:flex hidden"
+                  }   flex-wrap text-gray-500  justify-center mt-auto mb-2 items-center  gap-0.5`}
                 >
-                  <Icon
-                    icon="trash-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      props?.onDeleteAction(each);
-                    }}
-                    className="!h-5 !w-5 hover:text-red-600 hover:bg-red-100 p-1 rounded-md cursor-pointer"
-                  />
-                  {each?.message?.action_id ? null : props?.editItem ===
+                  {!props?.editItem ? (
+                    <Icon
+                      icon="trash-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        props?.onDeleteAction(each);
+                      }}
+                      className="!h-5 !w-5 hover:text-red-600 hover:bg-red-100 p-1 rounded-md cursor-pointer"
+                    />
+                  ) : null}
+
+                  {each?.message?.action_id ||
+                  (props?.editItem &&
+                    props?.editItem !==
+                      each?.message?.id) ? null : props?.editItem ===
                     each?.message?.id ? (
                     <Icon
                       icon="x"
@@ -94,15 +102,15 @@ export function MessageRenderer(props: MessageRendererPropsI) {
                 {" "}
                 {each?.message?.value}
               </SmallText>
-              {!each?.user?.is_bot ? (
+              {!each?.from_user?.is_bot ? (
                 <div
                   className={`h-8 w-8 mt-1.5 ${
                     each?.isLoading ? "flex items-center justify-center" : ""
                   }  relative`}
                 >
                   <img
-                    alt={each?.user?.name}
-                    src={each?.user.profile_image}
+                    alt={each?.from_user?.name}
+                    src={each?.from_user.profile_image}
                     className={`${
                       each?.isLoading ? "opacity-0" : ""
                     } h-full w-full rounded-lg object-contain`}

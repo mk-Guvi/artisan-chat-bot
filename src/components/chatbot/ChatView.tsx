@@ -95,7 +95,7 @@ const ChatView = () => {
       }
       const temp: ChatI = {
         ...chat,
-        user: chatBotDetails.userDetails,
+        from_user: chatBotDetails.userDetails,
         message: {
           action_id: action?.action_id,
           id: action?.action_id,
@@ -170,7 +170,7 @@ const ChatView = () => {
           context: "ONBOARDING",
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          user: chatBotDetails?.userDetails,
+          from_user: chatBotDetails?.userDetails,
           isLoading: true,
           message: {
             id,

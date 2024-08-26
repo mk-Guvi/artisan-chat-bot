@@ -3,13 +3,15 @@ export interface ChatActionI {
   value: string;
   action_id: string;
 }
+export interface UserI{
+  name: string;
+  profile_image: string;
+  is_bot: boolean;
+  user_id:string
+}
 
 export interface ChatI {
-  user: {
-    name: string;
-    profile_image: string;
-    is_bot: boolean;
-  };
+  from_user: UserI;
 
   chat_id: string;
   context: "ONBOARDING";

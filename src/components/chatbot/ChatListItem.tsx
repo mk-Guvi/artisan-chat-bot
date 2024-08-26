@@ -27,7 +27,7 @@ function ListItem({ chat, onRouteToChatview }: ListItemPropT) {
           {chat?.message?.value}
         </SmallText>
         <MessageMetadataContainer>
-          <ExtraSmallText>{chat?.user?.name}</ExtraSmallText>
+          <ExtraSmallText>{chat?.from_user?.name}</ExtraSmallText>
           <SecondaryIndicator />
           <ExtraSmallText>{getLastSeen(chat?.updated_at)}</ExtraSmallText>
         </MessageMetadataContainer>
@@ -42,7 +42,7 @@ function ListItem({ chat, onRouteToChatview }: ListItemPropT) {
 
 export default ListItem;
 
-const ListContainer = tw.div`group  transition-all duration-200 cursor-pointer border-b flex items-center gap-3 py-6 px-3`;
+const ListContainer = tw.div`group  transition-all duration-200 cursor-pointer flex items-center gap-3 py-6 px-3`;
 const MessageContainer = tw.div`inline-flex flex-1 items-start sm:max-w-[78%] w-[79%] flex-col overflow-clip gap-1`;
 const SecondaryIndicator = tw.div`h-1.5 w-1.5 rounded-full bg-gray-300`;
 

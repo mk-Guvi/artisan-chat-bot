@@ -27,8 +27,8 @@ export const convertLocalDateToUTC = (
 ): string => dayjs(localDate, inputFormat).utc().format(outputFormat);
 
 export const getLastSeen = (utcString: string): string => {
-  const now = dayjs();
-  const then = dayjs(utcString);
+  const now = dayjs(); // Current local time
+  const then = dayjs.utc(utcString).local(); // Convert UTC to local time
   const diff = now.diff(then, 'second');
 
   if (diff < 30) return 'Just now';
