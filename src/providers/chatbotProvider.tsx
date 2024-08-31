@@ -7,12 +7,9 @@ import React, {
   useEffect,
 } from "react";
 import { ChatI, UserI } from "../types/chatbot.types";
-import {
-  ChatBotIcon,
-  dummyData,
-} from "../components/chatbot/chatbotComponents";
+import { ChatBotIcon } from "../components/chatbot/chatbotComponents";
 import ChatbotContainer from "../components/chatbot/ChatbotContainer";
-import { makeId, suspenseDelay } from "../../utils";
+import { suspenseDelay } from "../../utils";
 import { backendRoutes, LANG } from "../constants";
 import { BackendGet, BackendPost } from "../integration";
 
@@ -28,15 +25,15 @@ export interface ChatViewData {
   count: number;
   hideInputfield: boolean;
 }
-
+export interface ChatBotDetailsI{
+  userDetails: UserI;
+  botDetails: UserI;
+  show: boolean;
+}
 interface ChatBotState {
   open: boolean;
   route: "chats" | "chat-view";
-  chatBotDetails: {
-    userDetails: UserI;
-    botDetails: UserI;
-    show: boolean;
-  };
+  chatBotDetails:ChatBotDetailsI ;
 
   chatsListView: {
     loading: boolean;
@@ -393,7 +390,7 @@ export const ChatbotProvider: React.FC<ChatbotProviderProps> = ({
     try {
       handleChatsListView({ loading: true });
       const response = await BackendGet({
-        path: backendRoutes.chatLists,
+        path: backendRoutes.chatbotBase,
       });
       if (response?.type === "success") {
         handleChatsListView({
@@ -412,10 +409,26 @@ export const ChatbotProvider: React.FC<ChatbotProviderProps> = ({
 
   const getChatDetails = useCallback(async () => {
     try {
-      await suspenseDelay(2000);
-      handleChatBotDetails({
-        show: true,
+      const response = await BackendGet({
+        path: backendRoutes.chatbotUser,
       });
+      
+      if (response?.type === "success") {
+        const getUserDetailsResponse = await BackendGet({
+          path: `${backendRoutes.userBase}/f20e9aad-1e32-4e37-8944-969dadb5aa6f`,
+        });
+        if (getUserDetailsResponse?.type === "success") {
+          handleChatBotDetails({
+            show: true,
+            botDetails: response?.data || {},
+            userDetails: getUserDetailsResponse?.data,
+          });
+        } else {
+          throw new Error("Failed To get User Details");
+        }
+      } else {
+        throw new Error(response?.message || "Failed to get Chatbot data");
+      }
     } catch (e) {
       console.error(e);
     }

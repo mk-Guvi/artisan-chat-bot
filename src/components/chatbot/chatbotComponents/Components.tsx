@@ -46,11 +46,11 @@ export const ChatBotIcon = () => {
 };
 
 export const ChatHeader = () => {
-  const { onBackToChats, toggleChat, actionsDisable } = useChatbot();
+  const { onBackToChats, toggleChat,  } = useChatbot();
 
   return (
     <header className="p-2 py-4 border-b w-full flex">
-      <button disabled={actionsDisable} onClick={onBackToChats}>
+      <button  onClick={onBackToChats}>
         <ActionIcon icon="chevron-left" className="text-purple-700" />
       </button>
       <div

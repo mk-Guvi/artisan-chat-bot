@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
 );
 
 interface BackendRequestParams {
-  path: (typeof backendRoutes)[keyof typeof backendRoutes];
+  path: (typeof backendRoutes)[keyof typeof backendRoutes]|string;
   data?: Record<string, any>;
   queryParams?: Record<string, any>;
   headers?: {

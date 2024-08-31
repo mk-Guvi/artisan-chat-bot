@@ -5,10 +5,11 @@ import { Icon } from "../../Icons";
 type ChatbotInputfieldPropsT = {
   disabled?: boolean;
   onEnter: (value: string) => void;
-  inpValue?: string;
+  inpValue: string;
+  inputChangeWatcher:number
 };
 export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
-  const { onEnter, disabled, inpValue } = props;
+  const { onEnter, disabled, inpValue ,inputChangeWatcher} = props;
   const inputElementRef = useRef<HTMLInputElement | null>(null);
   const [value, setValue] = useState("");
 
@@ -18,7 +19,7 @@ export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
 
   useEffect(() => {
     setValue(inpValue || "");
-  }, [inpValue]);
+  }, [inputChangeWatcher]);
 
   const onSubmit = useCallback(() => {
     const trimmedValue = value?.trim();

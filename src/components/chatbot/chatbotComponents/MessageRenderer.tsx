@@ -1,170 +1,210 @@
-import React, { useState } from "react";
-
-import { SmallText } from "../../Typography";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ExtraSmallText,  } from "../../Typography";
 import { Icon } from "../../Icons";
 import { ChatActionI, ChatI } from "../../../types/chatbot.types";
 import { CircularLoader } from "../../loaders";
 import { useChatbot } from "../../../providers/chatbotProvider";
-interface MessageRendererPropsI {
+
+interface MessageRendererProps {
+  chat: ChatI;
   onSelectAction: (chat: ChatI, action: ChatActionI) => Promise<void>;
-  chats: ChatI[];
   onDeleteAction: (chat: ChatI) => Promise<void>;
   editItem: string;
   onCancelEdit: () => void;
-  onEditValue: React.Dispatch<
-    React.SetStateAction<{
-      messageId: string;
-      value: string;
-    }>
-  >;
+  onEditValue: (value: string, messageId: string) => void;
+  loadingAction: string;
+  setLoadingAction: (val: string) => void;
 }
-export function MessageRenderer(props: MessageRendererPropsI) {
-  const { actionsDisable } = useChatbot();
-  const [loadingAction, setLoadingAction] = useState("");
-  return (
-    <div className="flex flex-col  gap-4 h-full w-full">
-      {props?.chats?.map((each) => {
-        return (
-          <div key={each?.message?.id} className="flex flex-col gap-2">
-            <div
-              className={`flex group transition-all duration-300 pb-2 text-purple-800 items-start gap-1.5 relative ${
-                each?.from_user?.is_bot ? "justify-start" : "justify-end"
-              }`}
-            >
-              {each?.from_user?.is_bot ? (
-                <div
-                  className={`h-8 w-8 mt-1.5 ${
-                    each?.isLoading ? "flex items-center justify-center" : ""
-                  } rounded-lg relative`}
-                >
-                  <img
-                    alt={each?.from_user?.name}
-                    src={each?.from_user?.profile_image}
-                    className={`${
-                      each?.isLoading ? "opacity-0" : ""
-                    } h-full w-full rounded-lg  object-contain`}
-                  />
-                  <CircularLoader
-                    className={`text-purple-800 absolute !h-4 !w-4 ${
-                      each?.isLoading ? "block" : "hidden"
-                    }`}
-                  />
-                </div>
-              ) : each?.isLoading ? null : (
-                <div
-                  className={`${
-                    props?.editItem === each?.message?.id
-                      ? "flex"
-                      : "group-hover:flex hidden"
-                  }   flex-wrap text-gray-500  justify-center mt-auto mb-2 items-center  gap-0.5`}
-                >
-                  {!props?.editItem ? (
-                    <Icon
-                      icon="trash-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        props?.onDeleteAction(each);
-                      }}
-                      className="!h-5 !w-5 hover:text-red-600 hover:bg-red-100 p-1 rounded-md cursor-pointer"
-                    />
-                  ) : null}
 
-                  {each?.message?.action_id ||
-                  (props?.editItem &&
-                    props?.editItem !==
-                      each?.message?.id) ? null : props?.editItem ===
-                    each?.message?.id ? (
-                    <Icon
-                      icon="x"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        props.onCancelEdit();
-                      }}
-                      className="!h-5 !w-5 hover:text-blue-600 hover:bg-blue-100 p-1 rounded-md cursor-pointer"
-                    />
-                  ) : (
-                    <Icon
-                      icon="edit-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        props.onEditValue({
-                          messageId: each?.message?.id,
-                          value: each?.message?.value,
-                        });
-                      }}
-                      className="!h-5 !w-5 hover:text-blue-600 hover:bg-blue-100 p-1 rounded-md cursor-pointer"
-                    />
-                  )}
-                </div>
-              )}
+const MessageRenderer: React.FC<MessageRendererProps> = ({
+  chat,
+  onSelectAction,
+  onDeleteAction,
+  editItem,
+  onCancelEdit,
+  onEditValue,
+  loadingAction,
+  setLoadingAction,
+}) => {
+  const { actionsDisable, chatBotDetails } = useChatbot();
 
-              <SmallText className="p-2 px-4 bg-purple-50 max-w-[70%] rounded-md">
-                {" "}
-                {each?.message?.value}
-              </SmallText>
-              {!each?.from_user?.is_bot ? (
-                <div
-                  className={`h-8 w-8 mt-1.5 ${
-                    each?.isLoading ? "flex items-center justify-center" : ""
-                  }  relative`}
-                >
-                  <img
-                    alt={each?.from_user?.name}
-                    src={each?.from_user.profile_image}
-                    className={`${
-                      each?.isLoading ? "opacity-0" : ""
-                    } h-full w-full rounded-lg object-contain`}
-                  />
-                  <CircularLoader
-                    className={`text-purple-800 absolute !h-4 !w-4 ${
-                      each?.isLoading ? "block" : "hidden"
-                    }`}
-                  />
-                </div>
-              ) : null}
-            </div>
-            {each?.actions?.length ? (
-              <div className="flex  items-center gap-2 pb-2 flex-wrap max-w-[75%]">
-                {each?.actions?.map((eachAction) => {
-                  return (
-                    <button
-                      disabled={
-                        actionsDisable ||
-                        loadingAction === eachAction?.action_id
-                      }
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        setLoadingAction(eachAction?.action_id);
-                        await props?.onSelectAction(each, eachAction);
-                        setLoadingAction("");
-                      }}
-                      className="border p-2 px-4 text-xs flex items-center justify-center relative rounded-3xl text-purple-700 border-purple-600 bg-purple-50"
-                      key={eachAction?.action_id}
-                    >
-                      <CircularLoader
-                        className={`absolute ${
-                          loadingAction === eachAction?.action_id
-                            ? "block"
-                            : "hidden"
-                        } !h-4 !w-4 text-purple-800`}
-                      />
-                      <SmallText
-                        className={`${
-                          loadingAction === eachAction?.action_id
-                            ? "opacity-0"
-                            : ""
-                        }`}
-                      >
-                        {eachAction?.value}
-                      </SmallText>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
-        );
-      })}
+  const renderActionButtons = () => (
+    <div className="flex items-center gap-2 pb-2 flex-wrap max-w-[75%]">
+      {chat.actions?.map((action) => (
+        <button
+          key={action.action_id}
+          disabled={actionsDisable || loadingAction === action.action_id}
+          onClick={async (e) => {
+            e.stopPropagation();
+            setLoadingAction(action.action_id);
+            await onSelectAction(chat, action);
+            setLoadingAction("");
+          }}
+          className={`border p-2 px-4 text-xs flex items-center justify-center relative rounded-3xl text-purple-700 border-purple-600 bg-purple-50 ${
+            actionsDisable ? "cursor-not-allowed" : ""
+          }`}
+        >
+          <CircularLoader
+            className={`absolute ${
+              loadingAction === action.action_id ? "block" : "hidden"
+            } !h-4 !w-4 text-purple-800`}
+          />
+          <ExtraSmallText
+            className={loadingAction === action.action_id ? "opacity-0" : ""}
+          >
+            {action.value}
+          </ExtraSmallText>
+        </button>
+      ))}
     </div>
   );
+
+  const renderEditButtons = () => (
+    <div
+      className={`${
+        editItem === chat.message.id ? "flex" : "group-hover:flex hidden"
+      } flex-wrap text-gray-500 justify-center mt-auto mb-2 items-center gap-0.5`}
+    >
+      {!editItem && (
+        <Icon
+          icon="trash-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDeleteAction(chat);
+          }}
+          className="!h-5 !w-5 hover:text-red-600 hover:bg-red-100 p-1 rounded-md cursor-pointer"
+        />
+      )}
+      {!chat.message.action_id && (
+        <Icon
+          icon={editItem === chat.message.id ? "x" : "edit-2"}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (editItem === chat.message.id) {
+              onCancelEdit();
+            } else {
+              onEditValue(chat.message.value, chat.message.id);
+            }
+          }}
+          className="!h-5 !w-5 hover:text-blue-600 hover:bg-blue-100 p-1 rounded-md cursor-pointer"
+        />
+      )}
+    </div>
+  );
+  const getUserDetails = useMemo(() => {
+    return chatBotDetails?.userDetails?.user_id === chat?.from_user
+      ? chatBotDetails?.userDetails||{}
+      : chatBotDetails?.botDetails||{};
+  }, [chat?.from_user, chatBotDetails]);
+  return (
+    <div className="flex flex-col gap-2" id={chat?.message?.id}>
+      <div
+        className={`flex group transition-all duration-300 pb-2 text-purple-800 items-start gap-1.5 relative ${
+          getUserDetails?.is_bot ? "justify-start" : "justify-end"
+        }`}
+      >
+        {getUserDetails?.is_bot ? (
+          <div
+            className={`h-8 w-8 mt-1.5 ${
+              chat.isLoading ? "flex items-center justify-center" : ""
+            } rounded-lg relative`}
+          >
+            <img
+              alt={getUserDetails?.name}
+              src={getUserDetails.profile_image}
+              className={`${
+                chat.isLoading ? "opacity-0" : ""
+              } h-full w-full rounded-lg object-contain`}
+            />
+            <CircularLoader
+              className={`text-purple-800 absolute !h-4 !w-4 ${
+                chat.isLoading ? "block" : "hidden"
+              }`}
+            />
+          </div>
+        ) : chat.isLoading || actionsDisable ? null : (
+          renderEditButtons()
+        )}
+
+        <ExtraSmallText className="p-2 px-4 bg-purple-50 max-w-[70%] rounded-md">
+          {chat.message.value}
+        </ExtraSmallText>
+
+        {!getUserDetails?.is_bot && (
+          <div
+            className={`h-8 w-8 mt-1.5 ${
+              chat.isLoading ? "flex items-center justify-center" : ""
+            } relative`}
+          >
+            <img
+              alt={getUserDetails?.name}
+              src={getUserDetails?.profile_image}
+              className={`${
+                chat.isLoading ? "opacity-0" : ""
+              } h-full w-full rounded-lg object-contain`}
+            />
+            <CircularLoader
+              className={`text-purple-800 absolute !h-4 !w-4 ${
+                chat.isLoading ? "block" : "hidden"
+              }`}
+            />
+          </div>
+        )}
+      </div>
+      {chat?.actions && chat?.actions?.length > 0
+        ? renderActionButtons()
+        : null}
+    </div>
+  );
+};
+
+interface MessagesRendererProps {
+  chats: ChatI[];
+  onSelectAction: (chat: ChatI, action: ChatActionI) => Promise<void>;
+  onDeleteAction: (chat: ChatI) => Promise<void>;
+  editItem: string;
+  onCancelEdit: () => void;
+  onEditValue: (value: string, messageId: string) => void;
 }
+
+export const MessagesRenderer: React.FC<MessagesRendererProps> = ({
+  chats,
+  onSelectAction,
+  onDeleteAction,
+  editItem,
+  onCancelEdit,
+  onEditValue,
+}) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [loadingAction, setLoadingAction] = useState("");
+  useEffect(() => {
+    const getLoadingItem = chats?.find((e) => e.isLoading);
+    if (getLoadingItem) {
+      const element = document.getElementById(getLoadingItem?.message?.id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chats]);
+
+  return (
+    <div className="flex flex-col gap-4 h-full w-full">
+      {chats.map((chat) => (
+        <MessageRenderer
+          key={chat.message.id}
+          setLoadingAction={setLoadingAction}
+          loadingAction={loadingAction}
+          chat={chat}
+          onSelectAction={onSelectAction}
+          onDeleteAction={onDeleteAction}
+          editItem={editItem}
+          onCancelEdit={onCancelEdit}
+          onEditValue={onEditValue}
+        />
+      ))}
+      <div ref={messagesEndRef} />
+    </div>
+  );
+};

@@ -2,7 +2,7 @@ type CircularLoaderPropsT = { className?: string }
 export const CircularLoader = (props: CircularLoaderPropsT) => {
   return (
     <svg
-      className={`${props?.className || ''} animate-spin h-6 w-6  text-black`}
+      className={`${props?.className || ''}  animate-spin h-6 w-6  text-black`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
