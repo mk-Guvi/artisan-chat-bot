@@ -21,6 +21,7 @@ export const ChatBotIcon = () => {
 
   return (
     <div
+    id="chatbot"
       className={`fixed  h-10 w-10  sm:flex  text-white flex items-center justify-center  rounded-full drop-shadow-lg hover:scale-110 transition-all duration-200 bg-purple-500 z-50 bottom-6 right-6 transform ${
         open ? "rotate-180 hidden" : ""
       } `}

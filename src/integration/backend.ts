@@ -11,7 +11,7 @@ const baseURL: string = import.meta.env.VITE_BASE_URL || "http://localhost:8000/
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
   },
