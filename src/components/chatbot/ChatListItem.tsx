@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import  { useMemo } from "react";
 
 import tw from "tailwind-styled-components";
 import { ChatI } from "../../types/chatbot.types";

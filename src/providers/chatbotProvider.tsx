@@ -9,7 +9,7 @@ import React, {
 import { ChatI, UserI } from "../types/chatbot.types";
 import { ChatBotIcon } from "../components/chatbot/chatbotComponents";
 import ChatbotContainer from "../components/chatbot/ChatbotContainer";
-import { suspenseDelay } from "../../utils";
+
 import { backendRoutes, LANG } from "../constants";
 import { BackendGet, BackendPost } from "../integration";
 

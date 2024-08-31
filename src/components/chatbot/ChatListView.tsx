@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { H5, SmallText } from "../Typography";
 import { useChatbot } from "../../providers/chatbotProvider";
 
@@ -11,6 +11,7 @@ import ListItem from "./ChatListItem";
 function ChatListView() {
   const {
     chatsListView,
+    chatBotDetails,
     onRouteToChatview,
 
     getChatsList,
@@ -36,6 +37,7 @@ function ChatListView() {
               {chatsListView?.chats?.map((each) => {
                 return (
                   <ListItem
+                  chatBotDetails={chatBotDetails}
                     chat={each}
                     key={each?.chat_id}
                     onRouteToChatview={onRouteToChatview}
