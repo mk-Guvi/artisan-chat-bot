@@ -36,7 +36,7 @@ text-sm
 `
 
 export const ExtraSmallText = tw.div`
-  text-xs
+  text-[0.7rem]
   break-words
 
 `

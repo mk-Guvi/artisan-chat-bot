@@ -423,6 +423,7 @@ const ChatView = () => {
       </section>
       {showInputField && (
         <ChatbotInputfield
+        
           onEnter={onInputData}
           inpValue={inputValue?.value}
           inputChangeWatcher={inputValue?.inputChangeWatcher}
