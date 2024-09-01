@@ -1,4 +1,4 @@
-import  { useMemo } from "react";
+import { useMemo } from "react";
 
 import tw from "tailwind-styled-components";
 import { ChatI } from "../../types/chatbot.types";
@@ -43,11 +43,17 @@ function ListItem({ chat, onRouteToChatview, chatBotDetails }: ListItemPropT) {
           {chat?.message?.value}
         </SmallText>
         <MessageMetadataContainer>
-          <ExtraSmallText className="truncate max-w-[24%]">{getUserDetails?.name}</ExtraSmallText>
+          <ExtraSmallText className="truncate max-w-[24%]">
+            {getUserDetails?.name}
+          </ExtraSmallText>
           <SecondaryIndicator />
-          <ExtraSmallText className="break-words truncate">{getLastSeen(chat?.updated_at)}</ExtraSmallText>
-          
-          <ExtraSmallText className="text-[0.4rem] tracking-wider font-medium text-purple-600 p-1 rounded-md bg-purple-100">{chat?.context}</ExtraSmallText>
+          <ExtraSmallText className="break-words truncate">
+            {getLastSeen(chat?.updated_at)}
+          </ExtraSmallText>
+
+          <ExtraSmallText className="text-[0.4rem] tracking-wider font-medium text-purple-600 p-1 rounded-md bg-purple-100">
+            {chat?.context}
+          </ExtraSmallText>
         </MessageMetadataContainer>
       </MessageContainer>
 
@@ -64,4 +70,4 @@ const ListContainer = tw.div`group  transition-all duration-200  cursor-pointer 
 const MessageContainer = tw.div`inline-flex flex-1 truncate items-start sm:max-w-[78%] w-[79%] flex-col overflow-clip gap-1`;
 const SecondaryIndicator = tw.div`h-1.5 w-1.5 rounded-full bg-gray-300`;
 
-const MessageMetadataContainer = tw.div`inline-flex justify-evenly w-full overflow-clip text-gray-600 items-center gap-2`;
+const MessageMetadataContainer = tw.div`inline-flex justify-start w-full overflow-clip text-gray-600 items-center gap-2`;

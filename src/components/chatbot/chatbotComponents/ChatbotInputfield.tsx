@@ -115,7 +115,7 @@ export const ChatbotInputfield = (props: ChatbotInputfieldPropsT) => {
         </div>
         <div
           className={`absolute inset-0 transition-transform h-full flex-1 duration-300 ${
-            showSettings ? "translate-x-0" : "translate-x-[300px]"
+            showSettings ? "translate-x-0" : "translate-x-[110vw]"
           }`}
         >
           <SettingsComponent context={chatView?.context} />
