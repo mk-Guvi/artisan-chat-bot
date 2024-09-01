@@ -1,4 +1,3 @@
-
 import tw from "tailwind-styled-components";
 import { ChatbotSvg } from "./ChatbotSvg";
 import { ExtraSmallText, MediumText, SmallText } from "../../Typography";
@@ -21,7 +20,7 @@ export const ChatBotIcon = () => {
 
   return (
     <div
-    id="chatbot"
+      id="chatbot"
       className={`fixed  h-10 w-10  sm:flex  text-white flex items-center justify-center  rounded-full drop-shadow-lg hover:scale-110 transition-all duration-200 bg-purple-500 z-50 bottom-6 right-6 transform ${
         open ? "rotate-180 hidden" : ""
       } `}
@@ -46,11 +45,11 @@ export const ChatBotIcon = () => {
 };
 
 export const ChatHeader = () => {
-  const { onBackToChats, toggleChat,  } = useChatbot();
+  const { onBackToChats, toggleChat } = useChatbot();
 
   return (
     <header className="p-2 py-4 border-b w-full flex">
-      <button  onClick={onBackToChats}>
+      <button onClick={onBackToChats}>
         <ActionIcon icon="chevron-left" className="text-purple-700" />
       </button>
       <div
@@ -65,7 +64,7 @@ export const ChatHeader = () => {
       </div>
       <ActionIcon
         icon="x"
-        className="text-purple-800 sm:invisible visible"
+        className="text-purple-800 my-auto sm:invisible visible"
         onClick={toggleChat}
       />
     </header>
@@ -74,4 +73,4 @@ export const ChatHeader = () => {
 
 const ActionIcon = tw(
   Icon
-)` text-blue-600 hover:bg-purple-100 p-1 !h-10 cursor-pointer !w-10 rounded-2xl transition-all duration-300`;
+)` text-blue-600 hover:bg-purple-100 p-1 !h-9 cursor-pointer !w-9 rounded-2xl transition-all duration-300`;

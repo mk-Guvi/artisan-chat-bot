@@ -7,13 +7,14 @@ import { LANG } from "../../constants";
 import { ChatbotSvg, ChatsLoader } from "./chatbotComponents";
 import { CreateChatButton } from "./chatbotComponents";
 import ListItem from "./ChatListItem";
+import { Icon } from "../Icons";
 
 function ChatListView() {
   const {
     chatsListView,
     chatBotDetails,
     onRouteToChatview,
-
+    toggleChat,
     getChatsList,
   } = useChatbot();
 
@@ -25,8 +26,9 @@ function ChatListView() {
 
   return (
     <div className="h-full flex relative flex-col w-full text-center overflow-auto">
-      <header className="bg-purple-100 text-purple-800 p-3 rounded-t-lg border-b-purple-200 border-b z-10">
-        <H5>Chats</H5>
+      <header className="bg-purple-100 text-purple-800 p-3 flex items-center rounded-t-lg border-b-purple-200 border-b z-10">
+        <H5 className="flex-1">Chats</H5>
+        <Icon icon="x" onClick={toggleChat} className="text-purple-600 !h-6 !w-6"/>
       </header>
       <section className="flex-1 hide-scroll divide-y flex flex-col overflow-x-hidden">
         {chatsListView?.loading ? (
