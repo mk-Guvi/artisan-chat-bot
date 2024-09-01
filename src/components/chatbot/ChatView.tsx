@@ -303,6 +303,16 @@ const ChatView = () => {
             }
           }
         } else {
+          let action_id = "";
+          if (lastChat?.actions?.length) {
+            const findAction = lastChat?.actions?.find((e) =>
+              e?.value?.toLowerCase()?.includes(value?.toLowerCase())
+            );
+            
+            if (findAction) {
+              action_id = findAction?.action_id||'';
+            }
+          }
           const id = makeId({ length: 8 });
           const data: ChatI = {
             chat_id: chatView?.currentChat,
@@ -315,6 +325,7 @@ const ChatView = () => {
               id,
               type: "string",
               value,
+              action_id
             },
           };
 
@@ -327,6 +338,7 @@ const ChatView = () => {
               message: {
                 type: "string",
                 value: value,
+                action_id
               },
             },
           });
@@ -354,6 +366,7 @@ const ChatView = () => {
       inputValue,
       currentChat,
       chatBotDetails?.userDetails?.user_id,
+      lastChat,
     ]
   );
 
@@ -423,7 +436,6 @@ const ChatView = () => {
       </section>
       {showInputField && (
         <ChatbotInputfield
-        
           onEnter={onInputData}
           inpValue={inputValue?.value}
           inputChangeWatcher={inputValue?.inputChangeWatcher}
